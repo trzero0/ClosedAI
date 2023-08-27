@@ -1,2 +1,2 @@
 # ClosedAI
-#Fitness Tracker 🏃💨
+# Fitness Tracker 🏃💨
