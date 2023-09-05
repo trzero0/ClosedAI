@@ -22,17 +22,18 @@ The fitness tracker consist of 3 repositories
 
 #### Entity Relationship Diagram
 
-[![diagram](./database_er.png)](./ClosedAI%20fitness%20tracker%20ER.erdplus)
+[![diagram](https://mermaid.ink/img/pako:eNp1kc9qwzAMxl_F6Ny-gM_rdhoMxtglYNRYaUwTK8gOW0nz7lPSGtaw3Wx9P336N0HNnsACyVPAk2BfRWM-Eom5Xvd7nswLRa8_a1pMi_YsQSOpDYOZeSVW2prmJpR8d_gmqUOiYnTHjtRxPCWXeSE_Wc48ZvfWYdyAtRBm8u54-QVumIGkYen_ox7ctUPuOv5aO9w2VxLVEiU7bv6CHsfSUTBpZY6wg56kx-B1kdOSWUFuqacKrD49yrmCKs7K4Zj5_RJrsFlG2sE4eB3yvvoSJB8yy-vtMOt9CnhYFbANdonmH3u5m64?type=png)](https://mermaid.live/edit#pako:eNp1kc9qwzAMxl_F6Ny-gM_rdhoMxtglYNRYaUwTK8gOW0nz7lPSGtaw3Wx9P336N0HNnsACyVPAk2BfRWM-Eom5Xvd7nswLRa8_a1pMi_YsQSOpDYOZeSVW2prmJpR8d_gmqUOiYnTHjtRxPCWXeSE_Wc48ZvfWYdyAtRBm8u54-QVumIGkYen_ox7ctUPuOv5aO9w2VxLVEiU7bv6CHsfSUTBpZY6wg56kx-B1kdOSWUFuqacKrD49yrmCKs7K4Zj5_RJrsFlG2sE4eB3yvvoSJB8yy-vtMOt9CnhYFbANdonmH3u5m64)
 
 #### Relational Schema
 
-[![schema](./database_rs.png)](./ClosedAI%20fitness%20tracker%20RS.erdplus)
+![schema](https://showme.redstarplugin.com/d/d:TLh8GPIp)
 
 ## Code
 
 ### Database table creation sql
 
 ```sql
+-- User Table
 CREATE TABLE user
 (
   user_id INT NOT NULL,
@@ -40,19 +41,58 @@ CREATE TABLE user
   email VARCHAR(255) NOT NULL,
   password_hash VARCHAR(500) NOT NULL,
   auth_token VARCHAR(500) NOT NULL,
+  height FLOAT NOT NULL,
+  weight FLOAT NOT NULL,
+  gender_id INT NOT NULL,
+  friend_code VARCHAR(50) UNIQUE NOT NULL,
   PRIMARY KEY (user_id),
-  UNIQUE (email)
+  UNIQUE (email),
+  FOREIGN KEY (gender_id) REFERENCES gender(gender_id)
 );
 
+-- Gender Table
+CREATE TABLE gender
+(
+  gender_id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (gender_id)
+);
+
+-- Friendship Table
+CREATE TABLE friendship
+(
+  user1_id INT NOT NULL,
+  user2_id INT NOT NULL,
+  status ENUM('PENDING', 'ACCEPTED') NOT NULL,
+  PRIMARY KEY (user1_id, user2_id),
+  FOREIGN KEY (user1_id) REFERENCES user(user_id),
+  FOREIGN KEY (user2_id) REFERENCES user(user_id)
+);
+
+-- User Exercise Table
+CREATE TABLE user_exercise
+(
+  user_exercise_id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  description VARCHAR(500),
+  video_url VARCHAR(500),
+  user_id INT NOT NULL,
+  PRIMARY KEY (user_exercise_id),
+  FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+-- Workout Plan Table
 CREATE TABLE workout_plan
 (
   plan_id INT NOT NULL,
   name VARCHAR(500) NOT NULL,
+  is_private INT NOT NULL,
   user_id INT NOT NULL,
   PRIMARY KEY (plan_id),
   FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
+-- Workout Table
 CREATE TABLE workout
 (
   workout_id INT NOT NULL,
@@ -65,16 +105,18 @@ CREATE TABLE workout
   FOREIGN KEY (plan_id) REFERENCES workout_plan(plan_id)
 );
 
+-- Exercise Table
 CREATE TABLE exercise
 (
   exercise_id INT NOT NULL,
-  name VARCHAR(50) NOT NULL,
+  user_exercise_id INT,
   set INT NOT NULL,
   repetition INT NOT NULL,
   rating FLOAT NOT NULL,
   duration INT NOT NULL,
   workout_id INT NOT NULL,
   PRIMARY KEY (exercise_id),
-  FOREIGN KEY (workout_id) REFERENCES workout(workout_id)
+  FOREIGN KEY (workout_id) REFERENCES workout(workout_id),
+  FOREIGN KEY (user_exercise_id) REFERENCES user_exercise(user_exercise_id)
 );
 ```
