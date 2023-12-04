@@ -98,6 +98,7 @@ The fitness tracker consist of 3 repositories
 
 ![schema](https://showme.redstarplugin.com/d/d:TLh8GPIp)
 
+
 ## Code
 
 ### Database table creation sql
