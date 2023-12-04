@@ -81,7 +81,6 @@ The fitness tracker consist of 3 repositories
 
 #### **XIII. Legal and Compliance Considerations**
 - Ensure the product complies with relevant laws and regulations regarding data protection and privacy.
-
 ## Diagrams & Schemas
 
 ### System structure
@@ -97,7 +96,6 @@ The fitness tracker consist of 3 repositories
 #### Relational Schema
 
 ![schema](https://showme.redstarplugin.com/d/d:TLh8GPIp)
-
 
 ## Code
 
